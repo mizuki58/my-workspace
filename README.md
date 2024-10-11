@@ -81,7 +81,7 @@ The workspace service includes the following programming languages and tools:
 - AWS SAM CLI
 - atc...
 
-## network diagram
+## Network Diagram
 
 ```mermaid
     graph LR
@@ -121,3 +121,6 @@ The workspace service includes the following programming languages and tools:
         workspace <--> aws-network
 ```
 
+## Additional Setting
+- [Sharing Git credentials with your container](https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials)
+- [Using SSH keys](https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials#_using-ssh-keys)
