@@ -46,6 +46,8 @@ vscode@8d0d24b7b8fd:~/workspace$ tree -adI '.git|.docker'
 
 >[!NOTE] 
 >[For IntelliJ IDEA](https://pleiades.io/help/idea/connect-to-devcontainer.html#create_dev_container_inside_ide)
+>
+>some parts might not be working....
 
 ## Services
 
