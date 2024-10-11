@@ -7,8 +7,11 @@
   "shutdownAction": "stopCompose",
   "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/setup.sh",
   "forwardPorts": [8080],
-  // optional
-  "features": {},
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1.6.0":{
+      "dockerDashComposeVersion": "v2"
+    }
+  },
   "customizations": {
     "vscode": {
       "settings": {
@@ -75,7 +78,9 @@
         // git/github
         "mhutchie.git-graph",
         "GitHub.vscode-pull-request-github",
-        "GitHub.vscode-github-actions"
+        "GitHub.vscode-github-actions",
+        // docker
+        "ms-azuretools.vscode-docker"
       ]
     }
   }
