@@ -1,0 +1,8 @@
+# devcontainer
+.env
+.docker/
+
+# git
+temp/*
+!temp/.gitkeep
+.git/
