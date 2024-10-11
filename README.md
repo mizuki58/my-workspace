@@ -70,6 +70,7 @@ The workspace service includes the following programming languages and tools:
 - Kotlin (via SDKMAN)
 - Python (via pyenv)
 - Node.js (via nvm)
+- Docker (via host os)
 - AWS CDK (via npm)
 - ~~Go (via gvm)~~
 - GCC and G++ (latest versions)
