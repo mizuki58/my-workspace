@@ -66,6 +66,8 @@ The workspace service includes the following programming languages and tools:
 
 - Java (via SDKMAN)
 - Gradle (via SDKMAN)
+- Maven (via SDKMAN)
+- Kotlin (via SDKMAN)
 - Python (via pyenv)
 - Node.js (via nvm)
 - AWS CDK (via npm)
