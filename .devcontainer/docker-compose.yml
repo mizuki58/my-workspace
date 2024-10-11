@@ -1,0 +1,128 @@
+services:
+  workspace:
+    container_name: ${PROJECT_NAME:-my}-workspace
+    build:
+      context: ./docker/workspace
+      args:
+        USER_NAME: ${USER_NAME:-vscode}
+        USER_GROUP_NAME: ${USER_GROUP_NAME:-workspace}
+        USER_UID: ${USER_UID:-1000}
+        USER_GID: ${USER_GID:-1000}
+        JAVA_VERSION: ${JAVA_VERSION:-17.0.11-amzn}
+        GRADLE_VERSION: ${GRADLE_VERSION:-8.8}
+        PYTHON_VERSION: ${PYTHON_VERSION:-3.10.5}
+        LATEST_C_VERSION: ${LATEST_C_VERSION:-12}
+        NODE_VERSION: ${NODE_VERSION:-18.18.0}
+        GO_VERSION: ${GO_VERSION:-1.19}
+        LOCALE: ${LOCALE:-ja_JP.UTF-8}
+    tty: true
+    environment:
+      TZ: ${TIME_ZONE:-Asia/Tokyo}
+    volumes:
+      - ../:/home/${USER_NAME:-vscode}/workspace:cached
+      - ~/.aws:/home/${USER_NAME:-vscode}/.aws
+    ports:
+      - ${WORKSPACE_PORT:-9999}:9999
+
+  postgres:
+    container_name: ${PROJECT_NAME:-my}-postgres
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ${DB_USER:-dbuser}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-thisIsReallyStrongPassword123}
+      POSTGRES_DB: ${DB_NAME:-dev}
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+    volumes:
+      - ../.docker/postgres:/var/lib/postgresql/data/
+    restart: unless-stopped
+
+  # to access http://localhost:8888/browser/
+  pgadmin4:
+    container_name: ${PROJECT_NAME:-my}-pgadmin
+    restart: always
+    image: dpage/pgadmin4:6.12
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin@example.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-password}
+    volumes:
+      - ../.docker/pgamin4_data:/var/lib/pgadmin
+    ports:
+      - ${PGADMIN_PORT:-8888}:80
+    depends_on:
+      - postgres
+
+  mysql:
+    container_name: ${PROJECT_NAME:-my}-mysql
+    restart: unless-stopped
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - ${MYSQL_PORT:-3306}:3306
+    volumes:
+      - ../.docker/mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-thisIsReallyStrongPassword123}
+      MYSQL_DATABASE: ${DB_NAME:-dev}
+      MYSQL_USER: ${DB_USER:-dbuser}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-thisIsReallyStrongPassword123}
+
+  mongodb:
+    image: mongo:6.0
+    restart: unless-stopped
+    container_name: ${PROJECT_NAME:-my}-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER:-dbuser}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD:-thisIsReallyStrongPassword123}
+      MONGO_INITDB_DATABASE: ${DB_NAME:-dev}
+    ports:
+      - ${MONGO_PORT:-27017}:27017
+    volumes:
+      - ../.docker/mongodb:/data/db
+
+  # url -> http://localhost:8081 or http://host-ip:8081
+  mongo-express:
+    image: mongo-express:1.0.0-alpha.4
+    container_name: ${PROJECT_NAME:-my}-mongo-express
+    restart: always
+    ports:
+      - ${MONGO_EXPRESS_PORT:-8081}:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${DB_USER:-dbuser}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${DB_PASSWORD:-thisIsReallyStrongPassword123}
+      ME_CONFIG_MONGODB_SERVER: ${MONGO_HOST:-mongodb}
+      ME_CONFIG_MONGODB_PORT: ${MONGO_PORT:-27017}
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: ${ME_CONFIG_MONGODB_ENABLE_ADMIN:-true}
+    depends_on:
+      - mongodb
+
+  nginx:
+    build:
+      context: ./docker/nginx
+    container_name: ${PROJECT_NAME:-my}-nginx
+    ports:
+      - ${NGINX_PORT:-3333}:80
+    volumes:
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+
+  # keycloak:
+  #   image: bitnami/keycloak:25
+  #   container_name: ${PROJECT_NAME:-my}-keycloak
+  #   ports: 
+  #     - ${KEYCLOAK_HTTP_PORT:-8080}:8080
+  #   restart: always
+  #   environment:
+  #     KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+  #     KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-password}
+  #     KEYCLOAK_DATABASE_HOST: postgres
+  #     KEYCLOAK_DATABASE_NAME: ${DB_NAME:-dev}
+  #     KEYCLOAK_DATABASE_USER: ${DB_USER:-dbuser}
+  #     KEYCLOAK_DATABASE_PASSWORD: ${DB_PASSWORD:-thisIsReallyStrongPassword123}
+  #     KEYCLOAK_LOG_LEVEL: ${KEYCLOAK_LOG_LEVEL:-info}
+  #     REALM_NAME: ${REALM_NAME:-default}
+  #     CLIENT_ID: ${BACKEND_CLIENT_ID:-default}
+  #     LIENT_SECRET: ${BACKEND_CLIENT_SECRET:-default}
+  #     REDIRECT_URIS: ${REDIRECT_URIS:-default}
+  #     ORIGIN_URIS: ${ORIGIN_URIS:-default}
+  #   depends_on:
+  #     - postgres

@@ -1,0 +1,82 @@
+{
+  "name": "workspace",
+  "dockerComposeFile": ["docker-compose.yml"],
+  "service": "workspace",
+  "workspaceFolder": "/home/vscode/workspace",
+  "remoteUser": "vscode",
+  "shutdownAction": "stopCompose",
+  "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/setup.sh",
+  "forwardPorts": [8080],
+  // optional
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "settings": {
+        // base
+        "files.eol": "\n",
+        // formatting
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "[yaml]": {
+          "editor.defaultFormatter": "redhat.vscode-yaml"
+        },
+        // live share for pair programming
+        "liveshare.allowGuestDebugControl": true,
+        "liveshare.allowGuestTaskControl": true,
+        "liveshare.languages.allowGuestCommandControl": true,
+        "liveshare.publishWorkspaceInfo": true,
+        "liveshare.autoShareTerminals": true,
+        // java
+        "java.import.exclusions": ["**/.docker"],
+        "java.configuration.updateBuildConfiguration": "automatic",
+        "java.import.gradle.wrapper.enabled": true,
+        // kotlin
+        "kotlin.debugAdapter.enabled": true,
+        "kotlin.languageServer.enabled": true,
+        "kotlin.languageServer.debugAttach.port": 5005,
+        "kotlin.languageServer.port": 5010,
+        "kotlin.languageServer.debugAttach.enabled": false,
+        "kotlin.languageServer.debugAttach.autoSuspend": true,
+        "kotlin.compiler.jvm.target": "17",
+        "kotlin.externalSources.autoConvertToKotlin": true,
+        // c++
+        "C_Cpp.default.cppStandard": "c++20",
+        "C_Cpp.clang_format_style": "{ BasedOnStyle: LLVM, BreakBeforeBraces: Attach, SpaceBeforeParens: Never, IndentWidth: 2 }"
+      },
+      "extensions": [
+        // util
+        "ms-vscode.live-server",
+        "ms-vsliveshare.vsliveshare",
+        "esbenp.prettier-vscode",
+        "streetsidesoftware.code-spell-checker",
+        "oderwat.indent-rainbow",
+        "mosapride.zenkaku",
+        "ritwickdey.LiveServer",
+        "redhat.vscode-yaml",
+        "yzhang.markdown-all-in-one",
+        "bierner.markdown-mermaid",
+        // java
+        "vscjava.vscode-java-pack",
+        "vscjava.vscode-gradle",
+        "vscjava.vscode-spring-initializr",
+        // db
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg",
+        "mtxr.sqltools-driver-mysql",
+        "mongodb.mongodb-vscode",
+        // python
+        "ms-python.python",
+        // node
+        "dbaeumer.vscode-eslint",
+        "Swellaby.node-pack",
+        // go
+        // "golang.go",
+        // aws
+        "amazonwebservices.aws-toolkit-vscode",
+        // git/github
+        "mhutchie.git-graph",
+        "GitHub.vscode-pull-request-github",
+        "GitHub.vscode-github-actions"
+      ]
+    }
+  }
+}
